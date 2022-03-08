@@ -3,6 +3,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import useCachedResources from './hooks/useCachedResources';
 import { RootStack } from './navigation/RootStack';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -12,8 +13,12 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        <RootStack />
-        <StatusBar style="dark" />
+        <ActionSheetProvider>
+          <>
+            <RootStack />
+            <StatusBar style="dark" />
+          </>
+        </ActionSheetProvider>
       </SafeAreaProvider>
     );
   }

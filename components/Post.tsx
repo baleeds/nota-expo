@@ -2,6 +2,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Colors } from '../constants/Colors';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 export interface PostItem {
   id: string;
@@ -21,6 +22,18 @@ interface Props {
 }
 
 export const Post: React.FC<Props> = ({ post }) => {
+  const { showActionSheetWithOptions } = useActionSheet();
+
+  const showMenu = () => {
+    showActionSheetWithOptions(
+      {
+        options: ['View replies', 'Favorite', 'Edit', 'Delete', 'Cancel'],
+        cancelButtonIndex: 4,
+      },
+      (index) => {},
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -40,13 +53,13 @@ export const Post: React.FC<Props> = ({ post }) => {
             <TouchableOpacity style={styles.contentRightIcon}>
               <AntDesign name={post.isFavorite ? 'heart' : 'hearto'} size={20} color={Colors.secondary} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.contentRightIcon}>
+            <TouchableOpacity style={styles.contentRightIcon} onPress={() => showMenu()}>
               <AntDesign name={'ellipsis1'} size={20} color={Colors.secondary} />
             </TouchableOpacity>
           </View>
         </View>
 
-        <TouchableOpacity style={styles.contentBody}>
+        <TouchableOpacity style={styles.contentBody} onLongPress={() => showMenu()}>
           <Text style={styles.contentText}>{post.text}</Text>
         </TouchableOpacity>
 
