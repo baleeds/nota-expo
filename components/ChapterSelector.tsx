@@ -113,10 +113,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  bookList: {
-    // flex: 1,
-    // flex: 0,
-  },
+  bookList: {},
   bookListContent: {
     paddingTop: 40,
     paddingBottom: 200,
@@ -150,11 +147,8 @@ const styles = StyleSheet.create({
     color: Colors.secondary,
     marginLeft: 12,
   },
-  chapterList: {
-    // flex: 1,
-  },
+  chapterList: {},
   chapterListContent: {
-    // flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     padding: 20,

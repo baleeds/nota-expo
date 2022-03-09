@@ -1,7 +1,10 @@
 ﻿import React from 'react';
-import { FlatList, SafeAreaView, StyleSheet } from 'react-native';
-import { PostItem } from '../components/Post';
-import { FeedPost } from '../components/FeedPost';
+import { ReadStackNavProps } from '../navigation/ReadStack';
+import { ScrollView, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Post, PostItem } from '../components/Post';
+import { ListPost } from '../components/ListPost';
+import { Colors } from '../constants/Colors';
+import { Button } from '../components/Button';
 
 const items: PostItem[] = [
   {
@@ -36,28 +39,50 @@ const items: PostItem[] = [
   },
 ];
 
-export const Feed: React.FC = () => {
+export const Verse: React.FC<ReadStackNavProps<'Verse'>> = () => {
+  const verseText =
+    'Jesus answered, “Truly, truly, I say to you, unless one is born of water and the Spirit, he cannot enter the kingdom of God.';
+
   return (
-    <SafeAreaView style={styles.list}>
-      <FlatList
-        data={items}
-        style={styles.list}
-        keyExtractor={({ id }) => id}
-        refreshing={false}
-        onRefresh={() => {}}
-        renderItem={({ item }) => {
-          return <FeedPost post={item} />;
-        }}
-      />
-    </SafeAreaView>
+    <SectionList
+      keyExtractor={({ id }) => id}
+      renderItem={({ item }) => <ListPost post={item} />}
+      sections={[
+        {
+          data: items,
+        },
+      ]}
+      ListHeaderComponent={() => (
+        <>
+          <View style={styles.verseContainer}>
+            <Text style={styles.verseText}>{verseText}</Text>
+          </View>
+
+          <View style={styles.actionContainer}>
+            <Button>Write an annotation</Button>
+          </View>
+        </>
+      )}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  view: {
-    flex: 1,
+  verseContainer: {
+    backgroundColor: Colors.backgroundLessLight,
+    paddingHorizontal: 40,
+    paddingVertical: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  list: {
-    flex: 1,
+  verseText: {
+    color: Colors.text,
+    fontSize: 18,
+    lineHeight: 28,
+  },
+  actionContainer: {
+    backgroundColor: Colors.backgroundWhite,
+    padding: 12,
+    paddingTop: 24,
   },
 });
