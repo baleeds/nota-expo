@@ -2,7 +2,7 @@
 import { StyleSheet, Text, TextStyle, TouchableOpacity, TouchableOpacityProps, ViewStyle } from 'react-native';
 import { Colors } from '../constants/Colors';
 
-type ButtonType = 'primary';
+type ButtonType = 'primary' | 'bold';
 
 type ButtonProps = {
   type?: ButtonType;
@@ -13,7 +13,11 @@ export const Button: React.FC<ButtonProps> = ({ type = 'primary', style, childre
   const typeStyles = typeStylesMap[type];
 
   return (
-    <TouchableOpacity style={[baseStyles.container, typeStyles.container, style]} {...touchableOpacityProps}>
+    <TouchableOpacity
+      style={[baseStyles.container, typeStyles.container, style]}
+      activeOpacity={0.6}
+      {...touchableOpacityProps}
+    >
       <Text style={[baseStyles.text, typeStyles.text]}>{children}</Text>
     </TouchableOpacity>
   );
@@ -41,6 +45,14 @@ const typeStylesMap: Record<ButtonType, { container: ViewStyle; text: TextStyle 
     },
     text: {
       color: Colors.primary,
+    },
+  }),
+  bold: StyleSheet.create({
+    container: {
+      backgroundColor: Colors.primary,
+    },
+    text: {
+      color: Colors.textInverse,
     },
   }),
 };

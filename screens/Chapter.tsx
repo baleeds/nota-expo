@@ -9,7 +9,7 @@ export const Chapter: React.FC<Props> = ({ navigation }) => {
     <View>
       <Text>Chapter</Text>
       <Button title="Toggle drawer" onPress={() => navigation.toggleDrawer()} />
-      <Button title="Go to verse" onPress={() => navigation.navigate('Verse', { verseId: 2 })} />
+      <Button title="Go to verse" onPress={() => navigation.navigate('Verse', { verseNumber: 2 })} />
     </View>
   );
 };

@@ -48,7 +48,7 @@ export const Post: React.FC<Props> = ({ post }) => {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.contentBody} onLongPress={() => showMenu()}>
+      <TouchableOpacity style={styles.contentBody} activeOpacity={0.8} onLongPress={() => showMenu()}>
         <Text style={styles.contentText}>{post.text}</Text>
       </TouchableOpacity>
 

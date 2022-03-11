@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import { ReadStackNavProps } from '../navigation/ReadStack';
-import { ScrollView, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Post, PostItem } from '../components/Post';
+import { SectionList, StyleSheet, Text, View } from 'react-native';
+import { PostItem } from '../components/Post';
 import { ListPost } from '../components/ListPost';
 import { Colors } from '../constants/Colors';
 import { Button } from '../components/Button';
@@ -39,7 +39,7 @@ const items: PostItem[] = [
   },
 ];
 
-export const Verse: React.FC<ReadStackNavProps<'Verse'>> = () => {
+export const Verse: React.FC<ReadStackNavProps<'Verse'>> = ({ navigation, route }) => {
   const verseText =
     'Jesus answered, “Truly, truly, I say to you, unless one is born of water and the Spirit, he cannot enter the kingdom of God.';
 
@@ -59,7 +59,9 @@ export const Verse: React.FC<ReadStackNavProps<'Verse'>> = () => {
           </View>
 
           <View style={styles.actionContainer}>
-            <Button>Write an annotation</Button>
+            <Button onPress={() => navigation.navigate('Annotate', { verseNumber: route.params.verseNumber })}>
+              Write an annotation
+            </Button>
           </View>
         </>
       )}
