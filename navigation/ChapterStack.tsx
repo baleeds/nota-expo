@@ -4,6 +4,8 @@ import { Chapter } from '../screens/Chapter';
 import { formatTextAddress } from '../utils/formatters/formatTextAddress';
 import { ChapterSelector } from '../components/ChapterSelector';
 import { useBookNavigation } from '../providers/BookNavigationProvider';
+import { ChapterHeaderRight } from '../components/ChapterHeaderRight';
+import { Colors } from '../constants/Colors';
 
 export interface ChapterStackParamList extends ParamListBase {
   ChapterText: undefined;
@@ -17,15 +19,14 @@ export type ChapterStackNavProps<T extends keyof ChapterStackParamList> = {
 const Drawer = createDrawerNavigator<ChapterStackParamList>();
 
 export function ChapterStack() {
-  const { bookName, chapterNumber } = useBookNavigation();
-
   return (
     <Drawer.Navigator initialRouteName="ChapterText" drawerContent={ChapterSelector}>
       <Drawer.Screen
         name="ChapterText"
         component={Chapter}
-        options={() => ({
-          title: formatTextAddress(bookName, chapterNumber),
+        options={({ navigation, route }) => ({
+          title: '',
+          headerLeft: () => <ChapterHeaderRight navigation={navigation} route={route} />,
           drawerStyle: {
             width: 250, // If changing this, make sure that the chapter options still render correctly.
           },

@@ -7,9 +7,9 @@ import { useBookNavigation } from '../providers/BookNavigationProvider';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { Verse } from '../screens/Verse';
 import { VerseBookmarkButton } from '../components/VerseBookmarkButton';
-import { Button } from '../components/Button';
 import { Annotate } from '../screens/Annotate';
 import { AnnotateHeaderRight } from '../components/AnnotateHeaderRight';
+import { Colors } from '../constants/Colors';
 
 export interface ReadStackParamList extends ParamListBase {
   Chapter: undefined;
