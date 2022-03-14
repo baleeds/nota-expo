@@ -4,8 +4,8 @@ import { Feather } from '@expo/vector-icons';
 import { Colors } from '../constants/Colors';
 import { HomeStack } from './HomeStack';
 import { ReadStack } from './ReadStack';
-import { CollectionStack } from './CollectionStack';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { CollectionOrLoginStack } from './CollectionOrLoginStack';
 
 export interface MainTabsStackParamList extends ParamListBase {
   Home: undefined;
@@ -46,7 +46,7 @@ export function MainTabsStack() {
     >
       <Tabs.Screen name="Home" component={HomeStack} />
       <Tabs.Screen name="Read" component={ReadStack} />
-      <Tabs.Screen name="Collection" component={CollectionStack} />
+      <Tabs.Screen name="Collection" component={CollectionOrLoginStack} />
     </Tabs.Navigator>
   );
 }

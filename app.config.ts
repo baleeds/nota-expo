@@ -1,4 +1,5 @@
-﻿import { ConfigContext } from '@expo/config';
+﻿import 'dotenv/config';
+import { ConfigContext } from '@expo/config';
 
 export default ({ config }: ConfigContext): any => ({
   ...config,

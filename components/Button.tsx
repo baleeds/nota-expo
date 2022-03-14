@@ -2,7 +2,7 @@
 import { StyleSheet, Text, TextStyle, TouchableOpacity, TouchableOpacityProps, ViewStyle } from 'react-native';
 import { Colors } from '../constants/Colors';
 
-type ButtonType = 'primary' | 'bold';
+type ButtonType = 'primary' | 'bold' | 'ghostSubtle';
 
 type ButtonProps = {
   type?: ButtonType;
@@ -53,6 +53,14 @@ const typeStylesMap: Record<ButtonType, { container: ViewStyle; text: TextStyle 
     },
     text: {
       color: Colors.textInverse,
+    },
+  }),
+  ghostSubtle: StyleSheet.create({
+    container: {
+      backgroundColor: undefined,
+    },
+    text: {
+      color: Colors.text,
     },
   }),
 };

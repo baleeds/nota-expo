@@ -7,6 +7,7 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { BookNavigationProvider } from './providers/BookNavigationProvider';
 import { ApolloProvider } from '@apollo/client';
 import { apolloClient } from './api/apollo';
+import { AuthProvider } from './providers/AuthProvider';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -16,16 +17,18 @@ export default function App() {
   } else {
     return (
       <ApolloProvider client={apolloClient}>
-        <SafeAreaProvider>
-          <ActionSheetProvider>
-            <BookNavigationProvider>
-              <>
-                <RootStack />
-                <StatusBar style="dark" />
-              </>
-            </BookNavigationProvider>
-          </ActionSheetProvider>
-        </SafeAreaProvider>
+        <AuthProvider>
+          <SafeAreaProvider>
+            <ActionSheetProvider>
+              <BookNavigationProvider>
+                <>
+                  <RootStack />
+                  <StatusBar style="dark" />
+                </>
+              </BookNavigationProvider>
+            </ActionSheetProvider>
+          </SafeAreaProvider>
+        </AuthProvider>
       </ApolloProvider>
     );
   }
