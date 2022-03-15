@@ -1,11 +1,8 @@
 ﻿import { ParamListBase, RouteProp } from '@react-navigation/native';
 import { createDrawerNavigator, DrawerNavigationProp } from '@react-navigation/drawer';
 import { Chapter } from '../screens/Chapter';
-import { formatTextAddress } from '../utils/formatters/formatTextAddress';
 import { ChapterSelector } from '../components/ChapterSelector';
-import { useBookNavigation } from '../providers/BookNavigationProvider';
 import { ChapterHeaderRight } from '../components/ChapterHeaderRight';
-import { Colors } from '../constants/Colors';
 
 export interface ChapterStackParamList extends ParamListBase {
   ChapterText: undefined;

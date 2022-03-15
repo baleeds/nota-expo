@@ -1,6 +1,6 @@
 ﻿import { useSignInMutation } from '../api/__generated__/apollo-graphql';
 import { useAuth } from '../providers/AuthProvider';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Logo } from '../components/Logo';
 import { FormGroup } from '../components/FormGroup';
@@ -8,13 +8,18 @@ import { FormTextInput } from '../components/FormTextInput';
 import { Colors } from '../constants/Colors';
 import { Button } from '../components/Button';
 import { useFormik } from 'formik';
+import { FullScreenLoading } from '../components/FullScreenLoading';
+import { Ionicons } from '@expo/vector-icons';
+import { LoginStackNavProps } from '../navigation/LoginStack';
+
+interface Props extends LoginStackNavProps<'Login'> {}
 
 interface Values {
   email: string;
   password: string;
 }
 
-export const Login: React.FC = () => {
+export const Login: React.FC<Props> = ({ navigation }) => {
   const [signInUserMutation] = useSignInMutation();
   const { login } = useAuth();
   const passwordRef = useRef<TextInput>(null);
@@ -24,7 +29,7 @@ export const Login: React.FC = () => {
       email: '',
       password: '',
     },
-    onSubmit: (values, { setSubmitting }) => {
+    onSubmit: (values, { setSubmitting, setStatus }) => {
       signInUserMutation({
         variables: {
           input: values,
@@ -38,6 +43,7 @@ export const Login: React.FC = () => {
           } = result?.data?.signIn.result || {};
 
           if (!accessToken || !refreshToken || !user) {
+            setStatus('Incorrect email or password.');
             return;
           }
 
@@ -63,6 +69,17 @@ export const Login: React.FC = () => {
         </View>
         <View style={styles.body}>
           <View>
+            {formik.status && (
+              <View style={styles.inlineError}>
+                <Ionicons
+                  name={'alert-circle-outline'}
+                  size={20}
+                  color={Colors.textError}
+                  style={styles.inlineErrorIcon}
+                />
+                <Text style={styles.inlineErrorText}>{formik.status}</Text>
+              </View>
+            )}
             <FormGroup label="Email">
               <FormTextInput
                 returnKeyType="next"
@@ -87,10 +104,11 @@ export const Login: React.FC = () => {
                 value={formik.values.password}
                 onChangeText={formik.handleChange('password')}
                 onBlur={formik.handleBlur('password')}
+                onSubmitEditing={formik.submitForm}
               />
             </FormGroup>
 
-            <Button type="primary" style={{ marginTop: 16 }} onPress={formik.submitForm}>
+            <Button type="primary" style={{ marginTop: 16 }} onPress={formik.submitForm} disabled={formik.isSubmitting}>
               Log in
             </Button>
 
@@ -99,11 +117,13 @@ export const Login: React.FC = () => {
             </Button>
           </View>
 
-          <Button type="ghostSubtle">
+          <Button type="ghostSubtle" onPress={() => navigation.navigate('SignUp')}>
             Dont have an account? <Text style={{ color: Colors.primary }}>Sign up</Text>
           </Button>
         </View>
       </SafeAreaView>
+
+      <FullScreenLoading isLoading={formik.isSubmitting} />
     </KeyboardAvoidingView>
   );
 };
@@ -128,5 +148,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 30,
     flex: 2,
+  },
+  inlineError: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inlineErrorText: {
+    fontSize: 14,
+    lineHeight: 17,
+    fontWeight: '500',
+    color: Colors.textError,
+  },
+  inlineErrorIcon: {
+    marginRight: 8,
   },
 });

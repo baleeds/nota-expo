@@ -1,6 +1,7 @@
 export const Colors = {
   text: '#545454',
   textLight: '#8C8C8C',
+  textError: '#F14949',
   backgroundWhite: '#FFFFFF',
   backgroundLight: '#FBFBFB',
   backgroundLessLight: '#F3F3F3',
