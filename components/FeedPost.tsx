@@ -1,24 +1,33 @@
 ﻿import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Colors } from '../constants/Colors';
-import { Post, PostItem } from './Post';
+import { Post } from './Post';
 import { Button } from './Button';
+import { AnnotationListFragment } from '../api/__generated__/apollo-graphql';
+import { usePassage } from '../hooks/usePassage';
+import { verseIdToPassageInfo } from '../utils/verseIdToPassageInfo';
+import { verseToText } from '../utils/verseToText';
+import { formatTextAddress } from '../utils/formatters/formatTextAddress';
 
 interface Props {
-  post: PostItem;
+  post: AnnotationListFragment;
 }
 
 export const FeedPost: React.FC<Props> = ({ post }) => {
+  const passageInfo = verseIdToPassageInfo(post.verseId);
+  const { verse, fullName, bookName, chapterNumber } = usePassage(passageInfo);
+  const verseText = verseToText(verse);
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <TouchableOpacity style={styles.titleTouchable} onPress={() => {}}>
-          <Text style={styles.titleText}>{post.verseAddress}</Text>
+          <Text style={styles.titleText}>{fullName}</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.verseContainer}>
-        <Text style={styles.verseText}>{post.verseText}</Text>
+        <Text style={styles.verseText}>{verseText}</Text>
       </View>
 
       <View style={styles.contentContainer}>
@@ -26,7 +35,7 @@ export const FeedPost: React.FC<Props> = ({ post }) => {
       </View>
 
       <View style={styles.actionContainer}>
-        <Button>Read {post.verseAddress}</Button>
+        <Button>Read {formatTextAddress(bookName, chapterNumber)}</Button>
       </View>
     </View>
   );

@@ -1,12 +1,12 @@
 import { gql } from '@apollo/client';
-import { annotationListFragment } from '../fragments/annotationList.fragment';
+import { annotationFragment } from '../fragments/annotation.fragment';
 
 export const favoriteAnnotationsQuery = gql`
   query FavoriteAnnotations($first: Int!, $after: String, $userId: ID!) {
     favoriteAnnotations(first: $first, after: $after, userId: $userId) {
       edges {
         node {
-          ...AnnotationList
+          ...Annotation
         }
       }
       pageInfo {
@@ -17,5 +17,5 @@ export const favoriteAnnotationsQuery = gql`
       }
     }
   }
-  ${annotationListFragment}
+  ${annotationFragment}
 `;

@@ -1,12 +1,12 @@
 import { gql } from '@apollo/client';
-import { annotationListFragment } from '../fragments/annotationList.fragment';
+import { annotationFragment } from '../fragments/annotation.fragment';
 
 export const collectionAnnotationsQuery = gql`
   query CollectionAnnotations($userId: ID!, $first: Int, $after: String) {
     publicAnnotations(userId: $userId, first: $first, after: $after) {
       edges {
         node {
-          ...AnnotationList
+          ...Annotation
         }
       }
       pageInfo {
@@ -17,5 +17,5 @@ export const collectionAnnotationsQuery = gql`
       }
     }
   }
-  ${annotationListFragment}
+  ${annotationFragment}
 `;

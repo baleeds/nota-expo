@@ -1,24 +1,14 @@
 ﻿import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Colors } from '../constants/Colors';
-import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-
-export interface PostItem {
-  id: string;
-  verseAddress: string;
-  verseText: string;
-  author: string;
-  isFavorite: boolean;
-  isMine: boolean;
-  text: string;
-  date: string;
-  numberOfFavorites: number;
-  numberOfReplies: number;
-}
+import { AnnotationFragment } from '../api/__generated__/apollo-graphql';
+import { formatUserName } from '../utils/formatters/formatUserName';
+import { formatDate } from '../utils/formatters/formatDate';
 
 interface Props {
-  post: PostItem;
+  post: AnnotationFragment;
 }
 
 export const Post: React.FC<Props> = ({ post }) => {
@@ -37,7 +27,7 @@ export const Post: React.FC<Props> = ({ post }) => {
   return (
     <View style={styles.contentContainer}>
       <View style={styles.contentHeader}>
-        <Text style={styles.authorText}>{post.author}</Text>
+        <Text style={styles.authorText}>{formatUserName(post.user)}</Text>
         <View style={styles.contentRight}>
           <TouchableOpacity style={styles.contentRightIcon}>
             <AntDesign name={post.isFavorite ? 'heart' : 'hearto'} size={20} color={Colors.secondary} />
@@ -53,16 +43,16 @@ export const Post: React.FC<Props> = ({ post }) => {
       </TouchableOpacity>
 
       <View style={styles.contentFooter}>
-        <Text style={styles.dateText}>{post.date}</Text>
+        <Text style={styles.dateText}>{formatDate(post.insertedAt)}</Text>
         <View style={styles.contentFooterRight}>
           <TouchableOpacity style={styles.iconAndText}>
             <AntDesign name={'heart'} size={12} color={Colors.textLight} />
             <Text style={styles.iconAndTextText}>{post.numberOfFavorites} favorites</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconAndText}>
-            <MaterialCommunityIcons name={'message'} size={12} color={Colors.textLight} />
-            <Text style={styles.iconAndTextText}>{post.numberOfFavorites} favorites</Text>
-          </TouchableOpacity>
+          {/*<TouchableOpacity style={styles.iconAndText}>*/}
+          {/*  <MaterialCommunityIcons name={'message'} size={12} color={Colors.textLight} />*/}
+          {/*  <Text style={styles.iconAndTextText}>{post.numberOfFavorites} favorites</Text>*/}
+          {/*</TouchableOpacity>*/}
         </View>
       </View>
     </View>

@@ -1,38 +1,40 @@
 ﻿import React from 'react';
 import { FlatList, SafeAreaView, StyleSheet } from 'react-native';
-import { PostItem } from '../components/Post';
 import { FeedPost } from '../components/FeedPost';
+import { AnnotationFragment } from '../api/__generated__/apollo-graphql';
 
-const items: PostItem[] = [
+const items: AnnotationFragment[] = [
   {
-    id: '1',
-    verseAddress: 'Isaiah 55:3',
-    verseText:
-      'Turn your ear, and come to me.  Hear and your soul will live: and I will make an everlasting covenant with you, even the sure mercies of David.',
-    author: 'Benjamin Leeds',
+    verseId: '01001001',
+    user: {
+      id: '1',
+      firstName: 'Benjamin',
+      lastName: 'Leeds',
+    },
     isFavorite: false,
-    isMine: true,
+    insertedAt: 'December 13, 2020',
+    numberOfFavorites: 51,
     text:
       'This could be the central piece of this book. Just as hard as it must be for a just and perfect God to love broken people like us, we should love through the difficulty of each other’s shortcomings. God loves us anyways. We ought to do the same.\n' +
       'God is so much more aware and present than we can understand. We understand God to the same level that we understand heaven. It’s truth is unfathomable.',
-    date: 'December 13, 2020',
-    numberOfFavorites: 51,
-    numberOfReplies: 43,
+    id: '1',
+    __typename: 'Annotation',
   },
   {
-    id: '2',
-    verseAddress: 'Isaiah 55:3',
-    verseText:
-      'Turn your ear, and come to me.  Hear and your soul will live: and I will make an everlasting covenant with you, even the sure mercies of David.',
-    author: 'Benjamin Leeds',
+    verseId: '01001001',
+    user: {
+      id: '1',
+      firstName: 'Benjamin',
+      lastName: 'Leeds',
+    },
     isFavorite: false,
-    isMine: true,
+    insertedAt: 'December 13, 2020',
+    numberOfFavorites: 51,
     text:
       'This could be the central piece of this book. Just as hard as it must be for a just and perfect God to love broken people like us, we should love through the difficulty of each other’s shortcomings. God loves us anyways. We ought to do the same.\n' +
       'God is so much more aware and present than we can understand. We understand God to the same level that we understand heaven. It’s truth is unfathomable.',
-    date: 'December 13, 2020',
-    numberOfFavorites: 51,
-    numberOfReplies: 43,
+    id: '2',
+    __typename: 'Annotation',
   },
 ];
 

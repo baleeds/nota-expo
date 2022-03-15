@@ -9,7 +9,7 @@ const httpLink = new HttpLink({ uri: Environment.apiUrl });
 
 const authLink = setContext(async (_, { headers }) => {
   const isAuthenticated = await isAccessTokenValid();
-  if (isAuthenticated) return { headers };
+  if (!isAuthenticated) return { headers };
 
   const token = await getAccessToken();
   return {
