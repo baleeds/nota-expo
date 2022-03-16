@@ -1,9 +1,6 @@
 ﻿import { validateTokenDate } from './validateTokenDate';
-import { getAccessToken } from './getAccessToken';
 
-export const isAccessTokenValid = async () => {
-  const token = await getAccessToken();
-
+export const isAccessTokenValid = (token: string | undefined | null) => {
   if (!token) {
     return false;
   }

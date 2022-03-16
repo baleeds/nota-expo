@@ -1,5 +1,10 @@
 ﻿import dayjs from 'dayjs';
 import { formatFallback } from './formatFallback';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+
+dayjs.extend(weekOfYear);
+dayjs.extend(relativeTime);
 
 export type FormattedDateType = 'simple' | 'full';
 

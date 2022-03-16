@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   contentText: {
     fontWeight: '400',
     color: Colors.text,
-    fontSize: 14,
+    fontSize: 15,
     lineHeight: 20,
   },
   contentFooter: {

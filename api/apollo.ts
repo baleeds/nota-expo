@@ -2,20 +2,33 @@
 import { Environment } from '../constants/Environment';
 import introspection from './__generated__/possibleTypes';
 import { setContext } from '@apollo/client/link/context';
-import { isAccessTokenValid } from '../utils/auth/isAuthTokenValid';
 import { getAccessToken } from '../utils/auth/getAccessToken';
+import { isAccessTokenValid } from '../utils/auth/isAuthTokenValid';
+import { requestNewAccessToken } from '../utils/auth/requestNewAccessToken';
 
 const httpLink = new HttpLink({ uri: Environment.apiUrl });
 
 const authLink = setContext(async (_, { headers }) => {
-  const isAuthenticated = await isAccessTokenValid();
-  if (!isAuthenticated) return { headers };
+  const accessToken = await getAccessToken();
+  if (!accessToken) return { headers };
 
-  const token = await getAccessToken();
+  const isValidToken = isAccessTokenValid(accessToken);
+  if (isValidToken) {
+    return {
+      headers: {
+        ...headers,
+        Authorization: `Bearer ${accessToken ?? ''}`,
+      },
+    };
+  }
+
+  const newAccessToken = await requestNewAccessToken();
+  if (!newAccessToken) return { headers };
+
   return {
     headers: {
       ...headers,
-      Authorization: `Bearer ${token ?? ''}`,
+      Authorization: `Bearer ${newAccessToken ?? ''}`,
     },
   };
 });

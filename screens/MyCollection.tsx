@@ -1,21 +1,15 @@
 ﻿import React, { useCallback } from 'react';
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { useAuth } from '../providers/AuthProvider';
-import { Button } from '../components/Button';
-import {
-  AnnotationListFragment,
-  useMyCollectionAnnotationsQuery,
-  useUserProfileQuery,
-} from '../api/__generated__/apollo-graphql';
+import { FlatList, SafeAreaView, StyleSheet } from 'react-native';
+import { AnnotationListFragment, useMyCollectionAnnotationsQuery } from '../api/__generated__/apollo-graphql';
 import { PageSize } from '../constants/PageSize';
 import { extractNodes } from '../utils/extractNodes';
 import produce from 'immer';
 import { FeedPost } from '../components/FeedPost';
 
 export const MyCollection: React.FC = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
-  const { data, loading, error, fetchMore, refetch } = useMyCollectionAnnotationsQuery({
+  const { data, loading, fetchMore, refetch } = useMyCollectionAnnotationsQuery({
     variables: {
       first: PageSize.default,
     },
