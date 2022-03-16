@@ -5,10 +5,10 @@ import { PageSize } from '../constants/PageSize';
 import { extractNodes } from '../utils/extractNodes';
 import produce from 'immer';
 import { FeedPost } from '../components/FeedPost';
+import { ShowMoreFooter } from '../components/ShowMoreFooter';
+import { EmptyOrLoading } from '../components/EmptyOrLoading';
 
 export const MyCollection: React.FC = () => {
-  // const { user } = useAuth();
-
   const { data, loading, fetchMore, refetch } = useMyCollectionAnnotationsQuery({
     variables: {
       first: PageSize.default,
@@ -45,12 +45,19 @@ export const MyCollection: React.FC = () => {
       <FlatList
         data={annotations}
         style={styles.list}
+        contentContainerStyle={{ flex: 1 }}
         keyExtractor={({ id }) => id}
         refreshing={loading}
         onRefresh={() => refetch()}
         renderItem={({ item }) => {
           return <FeedPost post={item} />;
         }}
+        ListEmptyComponent={() => (
+          <EmptyOrLoading loading={loading} emptyText="Start annotating to build your collection." />
+        )}
+        ListFooterComponent={() =>
+          pageInfo?.hasNextPage ? <ShowMoreFooter onPress={handleShowMore} disabled={loading} /> : null
+        }
       />
     </SafeAreaView>
   );

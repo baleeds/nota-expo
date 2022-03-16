@@ -4,7 +4,7 @@ import { Colors } from '../constants/Colors';
 
 type ButtonType = 'primary' | 'bold' | 'ghostSubtle' | 'ghostSecondary';
 
-type ButtonProps = {
+export type ButtonProps = {
   type?: ButtonType;
   style?: ViewStyle;
 } & TouchableOpacityProps;
