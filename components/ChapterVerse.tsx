@@ -31,7 +31,7 @@ export const ChapterVerse: React.FC<Props> = ({ verse, verseKey, bookName, chapt
     >
       {verse.map(({ text, quote, lineBreak }, index) => {
         const key = `${verseKey}-${index}`;
-        const verseNumberDisplay = <Text style={styles.verseNumber}>{verseNumber}</Text>;
+        const verseNumberDisplay = <Text style={styles.verseNumber}> {verseNumber} </Text>;
 
         if (text) {
           return (
@@ -48,7 +48,7 @@ export const ChapterVerse: React.FC<Props> = ({ verse, verseKey, bookName, chapt
             </Text>
           );
         } else if (lineBreak) {
-          return <View key={key} style={styles.spacer} />;
+          return <Text key={key}>{'\n\n'}</Text>;
         }
 
         return null;
@@ -68,13 +68,14 @@ const styles = StyleSheet.create({
   },
   verseNumber: {
     color: Colors.primary,
-    fontSize: 18,
-    lineHeight: 28,
+    fontSize: 14,
+    lineHeight: 30,
+    fontWeight: '500',
   },
   text: {
     color: Colors.text,
     fontSize: 18,
-    lineHeight: 28,
+    lineHeight: 30,
   },
   isAnnotated: {
     backgroundColor: Colors.backgroundLight,

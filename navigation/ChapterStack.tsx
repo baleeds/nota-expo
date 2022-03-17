@@ -3,6 +3,7 @@ import { createDrawerNavigator, DrawerNavigationProp } from '@react-navigation/d
 import { Chapter } from '../screens/Chapter';
 import { ChapterSelector } from '../components/ChapterSelector';
 import { ChapterHeaderRight } from '../components/ChapterHeaderRight';
+import { Colors } from '../constants/Colors';
 
 export interface ChapterStackParamList extends ParamListBase {
   ChapterText: undefined;
@@ -27,6 +28,7 @@ export function ChapterStack() {
           drawerStyle: {
             width: 250, // If changing this, make sure that the chapter options still render correctly.
           },
+          sceneContainerStyle: { backgroundColor: Colors.backgroundLight },
         })}
       />
     </Drawer.Navigator>
