@@ -1,4 +1,4 @@
-import bibleJson from './parsed-bible.json';
+import bibleJson from './bible.json';
 
 export interface BibleType {
   [key: string]: BibleBook;
