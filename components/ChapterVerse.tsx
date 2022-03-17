@@ -7,21 +7,21 @@ import { Colors } from '../constants/Colors';
 interface Props {
   verse: BibleVerse;
   verseKey: string;
-  bookName: string;
-  chapterNumber: number;
   verseNumber: number;
   verseData: VerseFragment | undefined;
+  onPress?: () => void;
 }
 
 function conditionalStyles(...pairs: [boolean, any][]): any[] {
   return pairs.filter(([active]) => active).map(([, style]) => style);
 }
 
-export const ChapterVerse: React.FC<Props> = ({ verse, verseKey, bookName, chapterNumber, verseNumber, verseData }) => {
+export const ChapterVerse: React.FC<Props> = ({ verse, verseKey, verseNumber, verseData, onPress }) => {
   const { isAnnotated = false, isAnnotatedByMe = false, isBookmarked = false } = verseData ?? {};
 
   return (
     <Text
+      onPress={onPress}
       style={conditionalStyles(
         [true, styles.container],
         [isAnnotated, styles.isAnnotated],
@@ -42,9 +42,13 @@ export const ChapterVerse: React.FC<Props> = ({ verse, verseKey, bookName, chapt
           );
         } else if (quote) {
           return (
-            <Text key={key} style={styles.text}>
-              {verseNumber && index === 0 && verseNumberDisplay}
-              {quote}
+            <Text key={key}>
+              <View style={styles.quoteText}>
+                <Text style={styles.text}>
+                  {verseNumber && index === 0 && verseNumberDisplay}
+                  {quote}
+                </Text>
+              </View>
             </Text>
           );
         } else if (lineBreak) {
@@ -62,10 +66,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
-  spacer: {
-    marginVertical: 10,
-    paddingVertical: 10,
-  },
   verseNumber: {
     color: Colors.primary,
     fontSize: 14,
@@ -76,6 +76,10 @@ const styles = StyleSheet.create({
     color: Colors.text,
     fontSize: 18,
     lineHeight: 30,
+  },
+  quoteText: {
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   isAnnotated: {
     backgroundColor: Colors.backgroundLight,

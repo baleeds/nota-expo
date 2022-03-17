@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import { Button, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { ChapterStackNavProps } from '../navigation/ChapterStack';
 import { useBookNavigation } from '../providers/BookNavigationProvider';
 import { usePassage } from '../hooks/usePassage';
@@ -28,10 +28,11 @@ export const Chapter: React.FC<Props> = ({ navigation }) => {
   const versesData: Array<VerseFragment | undefined> = data?.verses ?? [];
 
   return (
-    <ScrollView contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 30 }}>
+    <ScrollView contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: 40, paddingTop: 20 }}>
       <Text>
         {chapter.map((verse, index) => {
-          const verseKey = `readChapter-${bookName}-${chapterNumber}-${index}`;
+          const verseNumber = index + 1;
+          const verseKey = `readChapter-${bookName}-${chapterNumber}-${verseNumber}`;
           const verseData = versesData[index];
 
           return (
@@ -39,10 +40,9 @@ export const Chapter: React.FC<Props> = ({ navigation }) => {
               key={verseKey}
               verseKey={verseKey}
               verse={verse}
-              bookName={bookName}
-              chapterNumber={chapterNumber}
-              verseNumber={index + 1}
+              verseNumber={verseNumber}
               verseData={verseData}
+              onPress={() => navigation.navigate('Verse', { verseNumber })}
             />
           );
         })}
