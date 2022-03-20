@@ -8,6 +8,7 @@ import { BookNavigationProvider } from './providers/BookNavigationProvider';
 import { ApolloProvider } from '@apollo/client';
 import { apolloClient } from './api/apollo';
 import { AuthProvider } from './providers/AuthProvider';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -21,10 +22,12 @@ export default function App() {
           <SafeAreaProvider>
             <ActionSheetProvider>
               <BookNavigationProvider>
-                <>
-                  <RootStack />
-                  <StatusBar style="dark" />
-                </>
+                <RootSiblingParent>
+                  <>
+                    <RootStack />
+                    <StatusBar style="dark" />
+                  </>
+                </RootSiblingParent>
               </BookNavigationProvider>
             </ActionSheetProvider>
           </SafeAreaProvider>

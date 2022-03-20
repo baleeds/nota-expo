@@ -18,16 +18,22 @@ const Drawer = createDrawerNavigator<ChapterStackParamList>();
 
 export function ChapterStack() {
   return (
-    <Drawer.Navigator initialRouteName="ChapterText" drawerContent={ChapterSelector}>
+    <Drawer.Navigator
+      initialRouteName="ChapterText"
+      drawerContent={ChapterSelector}
+      screenOptions={{
+        drawerStyle: {
+          width: 250, // If changing this, make sure that the chapter options still render correctly.
+        },
+        swipeEnabled: false,
+      }}
+    >
       <Drawer.Screen
         name="ChapterText"
         component={Chapter}
         options={({ navigation, route }) => ({
           title: '',
           headerLeft: () => <ChapterHeaderRight navigation={navigation} route={route} />,
-          drawerStyle: {
-            width: 250, // If changing this, make sure that the chapter options still render correctly.
-          },
           sceneContainerStyle: { backgroundColor: Colors.backgroundLight },
         })}
       />

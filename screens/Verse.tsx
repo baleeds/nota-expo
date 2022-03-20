@@ -1,47 +1,79 @@
-﻿import React from 'react';
+﻿import React, { useCallback, useMemo } from 'react';
 import { ReadStackNavProps } from '../navigation/ReadStack';
 import { SectionList, StyleSheet, Text, View } from 'react-native';
-import { PostItem } from '../components/Post';
 import { ListPost } from '../components/ListPost';
 import { Colors } from '../constants/Colors';
 import { Button } from '../components/Button';
-
-const items: PostItem[] = [
-  {
-    id: '1',
-    verseAddress: 'Isaiah 55:3',
-    verseText:
-      'Turn your ear, and come to me.  Hear and your soul will live: and I will make an everlasting covenant with you, even the sure mercies of David.',
-    author: 'Benjamin Leeds',
-    isFavorite: false,
-    isMine: true,
-    text:
-      'This could be the central piece of this book. Just as hard as it must be for a just and perfect God to love broken people like us, we should love through the difficulty of each other’s shortcomings. God loves us anyways. We ought to do the same.\n' +
-      'God is so much more aware and present than we can understand. We understand God to the same level that we understand heaven. It’s truth is unfathomable.',
-    date: 'December 13, 2020',
-    numberOfFavorites: 51,
-    numberOfReplies: 43,
-  },
-  {
-    id: '2',
-    verseAddress: 'Isaiah 55:3',
-    verseText:
-      'Turn your ear, and come to me.  Hear and your soul will live: and I will make an everlasting covenant with you, even the sure mercies of David.',
-    author: 'Benjamin Leeds',
-    isFavorite: false,
-    isMine: true,
-    text:
-      'This could be the central piece of this book. Just as hard as it must be for a just and perfect God to love broken people like us, we should love through the difficulty of each other’s shortcomings. God loves us anyways. We ought to do the same.\n' +
-      'God is so much more aware and present than we can understand. We understand God to the same level that we understand heaven. It’s truth is unfathomable.',
-    date: 'December 13, 2020',
-    numberOfFavorites: 51,
-    numberOfReplies: 43,
-  },
-];
+import { useBookNavigation } from '../providers/BookNavigationProvider';
+import { usePassage } from '../hooks/usePassage';
+import { verseToText } from '../utils/verseToText';
+import { useAuth } from '../providers/AuthProvider';
+import {
+  AnnotationFragment,
+  useMyVerseAnnotationsQuery,
+  useVerseAnnotationsQuery,
+} from '../api/__generated__/apollo-graphql';
+import { extractNodes } from '../utils/extractNodes';
+import { PageSize } from '../constants/PageSize';
+import produce from 'immer';
+import { ShowMoreFooter } from '../components/ShowMoreFooter';
 
 export const Verse: React.FC<ReadStackNavProps<'Verse'>> = ({ navigation, route }) => {
-  const verseText =
-    'Jesus answered, “Truly, truly, I say to you, unless one is born of water and the Spirit, he cannot enter the kingdom of God.';
+  const { bookName, chapterNumber } = useBookNavigation();
+  const { verseNumber } = route.params;
+  const { verse, passageId } = usePassage({ bookName, chapterNumber, verseNumber });
+  const verseText = verseToText(verse);
+
+  const { user } = useAuth();
+
+  const verseAnnotations = useVerseAnnotationsQuery({
+    variables: {
+      verseId: passageId ?? '',
+      first: PageSize.default,
+    },
+  });
+  const myVerseAnnotations = useMyVerseAnnotationsQuery({
+    variables: { verseId: passageId ?? '' },
+    skip: !user,
+  });
+
+  const publicAnnotations = extractNodes<AnnotationFragment>(verseAnnotations.data?.publicAnnotations?.edges);
+  const myAnnotations = extractNodes<AnnotationFragment>(myVerseAnnotations.data?.myAnnotations?.edges);
+
+  const allAnnotations: AnnotationFragment[] | undefined = useMemo(() => {
+    if (!publicAnnotations) return undefined;
+    if (user) {
+      if (!myAnnotations) return undefined;
+      return [...myAnnotations, ...publicAnnotations];
+    }
+    return publicAnnotations;
+  }, [user, publicAnnotations, myAnnotations]);
+
+  const { pageInfo } = verseAnnotations.data?.publicAnnotations || {};
+  const loading = verseAnnotations.loading || myVerseAnnotations.loading;
+
+  const handleShowMore = useCallback(() => {
+    if (loading || !pageInfo?.hasNextPage) {
+      return;
+    }
+
+    verseAnnotations.fetchMore({
+      variables: {
+        first: PageSize.default,
+        after: pageInfo?.endCursor,
+      },
+      updateQuery: (previousResult, nextResult) => {
+        return produce(previousResult, (draftResult) => {
+          if (!draftResult?.publicAnnotations?.edges || !nextResult?.fetchMoreResult?.publicAnnotations?.edges) {
+            return previousResult;
+          }
+
+          draftResult.publicAnnotations.edges.push(...nextResult.fetchMoreResult.publicAnnotations.edges);
+          draftResult.publicAnnotations.pageInfo = nextResult.fetchMoreResult.publicAnnotations.pageInfo;
+        });
+      },
+    });
+  }, [pageInfo, verseAnnotations, loading]);
 
   return (
     <SectionList
@@ -49,7 +81,7 @@ export const Verse: React.FC<ReadStackNavProps<'Verse'>> = ({ navigation, route 
       renderItem={({ item }) => <ListPost post={item} />}
       sections={[
         {
-          data: items,
+          data: allAnnotations ?? [],
         },
       ]}
       ListHeaderComponent={() => (
@@ -64,6 +96,9 @@ export const Verse: React.FC<ReadStackNavProps<'Verse'>> = ({ navigation, route 
             </Button>
           </View>
         </>
+      )}
+      ListFooterComponent={() => (
+        <ShowMoreFooter onPress={() => handleShowMore()} disabled={verseAnnotations.loading} />
       )}
     />
   );

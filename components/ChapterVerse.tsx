@@ -82,10 +82,10 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   isAnnotated: {
-    backgroundColor: Colors.backgroundLight,
+    backgroundColor: Colors.backgroundLessLight,
   },
   isBookmarked: {
-    backgroundColor: Colors.primary9,
+    backgroundColor: Colors.secondary10,
   },
   isAnnotatedByMe: {
     backgroundColor: Colors.primary9,

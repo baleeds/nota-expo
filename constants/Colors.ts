@@ -9,5 +9,6 @@ export const Colors = {
   primary: '#9852F1',
   primary9: 'rgba(152, 82, 241, 0.09)',
   secondary: '#5292FF',
+  secondary10: 'rgba(82, 146, 255, 0.1)',
   textInverse: '#FFFFFF',
 } as const;
