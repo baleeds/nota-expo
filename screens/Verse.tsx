@@ -12,12 +12,14 @@ import { extractNodes } from '../utils/extractNodes';
 import { PageSize } from '../constants/PageSize';
 import produce from 'immer';
 import { ShowMoreFooter } from '../components/ShowMoreFooter';
+import { useAuth } from '../providers/AuthProvider';
 
 export const Verse: React.FC<ReadStackNavProps<'Verse'>> = ({ navigation, route }) => {
   const { bookName, chapterNumber } = useBookNavigation();
   const { verseNumber } = route.params;
   const { verse, passageId } = usePassage({ bookName, chapterNumber, verseNumber });
   const verseText = verseToText(verse);
+  const { user } = useAuth();
 
   const { data, loading, fetchMore } = useVerseAnnotationsQuery({
     variables: {
@@ -68,11 +70,13 @@ export const Verse: React.FC<ReadStackNavProps<'Verse'>> = ({ navigation, route 
             <Text style={styles.verseText}>{verseText}</Text>
           </View>
 
-          <View style={styles.actionContainer}>
-            <Button onPress={() => navigation.navigate('Annotate', { verseNumber: route.params.verseNumber })}>
-              Write an annotation
-            </Button>
-          </View>
+          {user && (
+            <View style={styles.actionContainer}>
+              <Button onPress={() => navigation.navigate('Annotate', { verseNumber: route.params.verseNumber })}>
+                Write an annotation
+              </Button>
+            </View>
+          )}
         </>
       )}
       ListFooterComponent={() =>

@@ -1,11 +1,11 @@
 import { gql } from '@apollo/client';
+import { annotationFragment } from '../fragments/annotation.fragment';
 
 export const saveAnnotationMutation = gql`
   mutation SaveAnnotation($input: SaveAnnotationInput!) {
     saveAnnotation(input: $input) {
       result {
-        id
-        text
+        ...Annotation
       }
       messages {
         field
@@ -14,4 +14,5 @@ export const saveAnnotationMutation = gql`
       successful
     }
   }
+  ${annotationFragment}
 `;

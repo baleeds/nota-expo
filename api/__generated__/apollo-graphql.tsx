@@ -620,7 +620,7 @@ export type SaveAnnotationMutationVariables = Exact<{
 }>;
 
 
-export type SaveAnnotationMutation = { __typename?: 'RootMutationType', saveAnnotation: { __typename?: 'SaveAnnotationPayload', successful: boolean, result?: { __typename?: 'Annotation', id: string, text: string } | null, messages?: Array<{ __typename?: 'ValidationMessage', field?: string | null, message?: string | null } | null> | null } };
+export type SaveAnnotationMutation = { __typename?: 'RootMutationType', saveAnnotation: { __typename?: 'SaveAnnotationPayload', successful: boolean, result?: { __typename?: 'Annotation', id: string, text: string, isFavorite: boolean, isMine: boolean, numberOfFavorites: number, insertedAt: any, verseId: string, user: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } } | null, messages?: Array<{ __typename?: 'ValidationMessage', field?: string | null, message?: string | null } | null> | null } };
 
 export type SendForgotPasswordMutationVariables = Exact<{
   input: SendForgotPasswordInput;
@@ -987,8 +987,7 @@ export const SaveAnnotationDocument = gql`
     mutation SaveAnnotation($input: SaveAnnotationInput!) {
   saveAnnotation(input: $input) {
     result {
-      id
-      text
+      ...Annotation
     }
     messages {
       field
@@ -997,7 +996,7 @@ export const SaveAnnotationDocument = gql`
     successful
   }
 }
-    `;
+    ${AnnotationFragmentDoc}`;
 export type SaveAnnotationMutationFn = Apollo.MutationFunction<SaveAnnotationMutation, SaveAnnotationMutationVariables>;
 
 /**

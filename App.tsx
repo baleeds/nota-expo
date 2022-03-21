@@ -10,6 +10,7 @@ import { apolloClient } from './api/apollo';
 import { AuthProvider } from './providers/AuthProvider';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from './constants/toastConfig';
+import { RecoilRoot } from 'recoil';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -19,19 +20,21 @@ export default function App() {
   } else {
     return (
       <ApolloProvider client={apolloClient}>
-        <AuthProvider>
-          <SafeAreaProvider>
-            <ActionSheetProvider>
-              <BookNavigationProvider>
-                <>
-                  <RootStack />
-                  <StatusBar style="dark" />
-                  <Toast config={toastConfig} />
-                </>
-              </BookNavigationProvider>
-            </ActionSheetProvider>
-          </SafeAreaProvider>
-        </AuthProvider>
+        <RecoilRoot>
+          <AuthProvider>
+            <SafeAreaProvider>
+              <ActionSheetProvider>
+                <BookNavigationProvider>
+                  <>
+                    <RootStack />
+                    <StatusBar style="dark" />
+                    <Toast config={toastConfig} />
+                  </>
+                </BookNavigationProvider>
+              </ActionSheetProvider>
+            </SafeAreaProvider>
+          </AuthProvider>
+        </RecoilRoot>
       </ApolloProvider>
     );
   }
