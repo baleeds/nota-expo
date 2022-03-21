@@ -1,6 +1,6 @@
 ﻿import React, { useCallback } from 'react';
 import { FlatList, SafeAreaView, StyleSheet } from 'react-native';
-import { AnnotationListFragment, useMyCollectionAnnotationsQuery } from '../api/__generated__/apollo-graphql';
+import { AnnotationFragment, useMyCollectionAnnotationsQuery } from '../api/__generated__/apollo-graphql';
 import { PageSize } from '../constants/PageSize';
 import { extractNodes } from '../utils/extractNodes';
 import produce from 'immer';
@@ -15,8 +15,8 @@ export const MyCollection: React.FC = () => {
     },
   });
 
-  const annotations = extractNodes<AnnotationListFragment>(data?.myAnnotations?.edges);
-  const { pageInfo } = data?.myAnnotations || {};
+  const annotations = extractNodes<AnnotationFragment>(data?.annotations?.edges);
+  const { pageInfo } = data?.annotations || {};
 
   const handleShowMore = useCallback(() => {
     if (loading || !pageInfo?.hasNextPage) {
@@ -29,45 +29,33 @@ export const MyCollection: React.FC = () => {
       },
       updateQuery: (previousResult, nextResult) => {
         return produce(previousResult, (draftResult) => {
-          if (!draftResult?.myAnnotations?.edges || !nextResult?.fetchMoreResult?.myAnnotations?.edges) {
+          if (!draftResult?.annotations?.edges || !nextResult?.fetchMoreResult?.annotations?.edges) {
             return previousResult;
           }
 
-          draftResult.myAnnotations.edges.push(...nextResult.fetchMoreResult.myAnnotations.edges);
-          draftResult.myAnnotations.pageInfo = nextResult.fetchMoreResult.myAnnotations.pageInfo;
+          draftResult.annotations.edges.push(...nextResult.fetchMoreResult.annotations.edges);
+          draftResult.annotations.pageInfo = nextResult.fetchMoreResult.annotations.pageInfo;
         });
       },
     });
   }, [pageInfo, fetchMore, loading]);
 
   return (
-    <SafeAreaView style={styles.list}>
+    <SafeAreaView style={{ flexGrow: 1 }}>
       <FlatList
         data={annotations}
-        style={styles.list}
-        contentContainerStyle={{ flex: 1 }}
+        contentContainerStyle={{ flexGrow: 1 }}
         keyExtractor={({ id }) => id}
         refreshing={loading}
         onRefresh={() => refetch()}
         renderItem={({ item }) => {
           return <FeedPost post={item} />;
         }}
-        ListEmptyComponent={() => (
-          <EmptyOrLoading loading={loading} emptyText="Start annotating to build your collection." />
-        )}
-        ListFooterComponent={() =>
+        ListEmptyComponent={<EmptyOrLoading loading={loading} emptyText="Start annotating to build your collection." />}
+        ListFooterComponent={
           pageInfo?.hasNextPage ? <ShowMoreFooter onPress={handleShowMore} disabled={loading} /> : null
         }
       />
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-  },
-  list: {
-    flex: 1,
-  },
-});

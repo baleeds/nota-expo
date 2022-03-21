@@ -1,6 +1,6 @@
 ﻿import React, { useCallback } from 'react';
 import { ReadStackNavProps } from '../navigation/ReadStack';
-import { SectionList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, SectionList, StyleSheet, Text, View } from 'react-native';
 import { ListPost } from '../components/ListPost';
 import { Colors } from '../constants/Colors';
 import { Button } from '../components/Button';
@@ -13,6 +13,7 @@ import { PageSize } from '../constants/PageSize';
 import produce from 'immer';
 import { ShowMoreFooter } from '../components/ShowMoreFooter';
 import { useAuth } from '../providers/AuthProvider';
+import { EmptyOrLoading } from '../components/EmptyOrLoading';
 
 export const Verse: React.FC<ReadStackNavProps<'Verse'>> = ({ navigation, route }) => {
   const { bookName, chapterNumber } = useBookNavigation();
@@ -56,14 +57,12 @@ export const Verse: React.FC<ReadStackNavProps<'Verse'>> = ({ navigation, route 
   }, [pageInfo, fetchMore, loading]);
 
   return (
-    <SectionList
+    <FlatList
+      contentContainerStyle={{ flexGrow: 1, backgroundColor: Colors.backgroundWhite }}
       keyExtractor={({ id }) => id}
       renderItem={({ item }) => <ListPost post={item} />}
-      sections={[
-        {
-          data: annotations ?? [],
-        },
-      ]}
+      data={annotations ?? []}
+      ListEmptyComponent={<EmptyOrLoading loading={loading} emptyText="There's nothing here yet." />}
       ListHeaderComponent={() => (
         <>
           <View style={styles.verseContainer}>
