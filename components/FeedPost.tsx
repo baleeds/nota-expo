@@ -3,14 +3,14 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Colors } from '../constants/Colors';
 import { Post } from './Post';
 import { Button } from './Button';
-import { AnnotationListFragment } from '../api/__generated__/apollo-graphql';
 import { usePassage } from '../hooks/usePassage';
 import { verseIdToPassageInfo } from '../utils/verseIdToPassageInfo';
 import { verseToText } from '../utils/verseToText';
 import { formatTextAddress } from '../utils/formatters/formatTextAddress';
+import { AnnotationFragment } from '../api/__generated__/apollo-graphql';
 
 interface Props {
-  post: AnnotationListFragment;
+  post: AnnotationFragment;
 }
 
 export const FeedPost: React.FC<Props> = ({ post }) => {

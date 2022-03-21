@@ -10,11 +10,12 @@ import { VerseBookmarkButton } from '../components/VerseBookmarkButton';
 import { Annotate } from '../screens/Annotate';
 import { AnnotateHeaderRight } from '../components/AnnotateHeaderRight';
 import { VerseLoader } from '../components/VerseLoader';
+import { AnnotationFragment } from '../api/__generated__/apollo-graphql';
 
 export interface ReadStackParamList extends ParamListBase {
   Chapter: undefined;
   Verse: { verseNumber: number };
-  Annotate: { verseNumber: number };
+  Annotate: { verseNumber: number; annotation?: Pick<AnnotationFragment, 'id' | 'text'> };
 }
 
 export type ReadStackNavProps<T extends keyof ReadStackParamList> = {

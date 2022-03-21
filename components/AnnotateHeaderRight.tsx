@@ -1,12 +1,7 @@
 ﻿import React, { useCallback, useEffect } from 'react';
 import { ReadStackNavProps } from '../navigation/ReadStack';
 import { Button } from './Button';
-import {
-  SaveAnnotationMutation,
-  useSaveAnnotationMutation,
-  VerseAnnotationsQuery,
-  VerseAnnotationsQueryVariables,
-} from '../api/__generated__/apollo-graphql';
+import { SaveAnnotationMutation, useSaveAnnotationMutation } from '../api/__generated__/apollo-graphql';
 import { usePassage } from '../hooks/usePassage';
 import { useBookNavigation } from '../providers/BookNavigationProvider';
 import Toast from 'react-native-toast-message';
@@ -14,9 +9,7 @@ import { attempt } from '../utils/attempt';
 import { normalizeErrors } from '../utils/normalizeErrors';
 import { ErrorMessages } from '../constants/ErrorMessages';
 import { useAuth } from '../providers/AuthProvider';
-import { apolloClient } from '../api/apollo';
 import { verseAnnotationsQuery } from '../api/queries/verseAnnotations.query';
-import produce from 'immer';
 import { useRecoilValue } from 'recoil';
 import { annotationAtom } from '../screens/Annotate';
 
@@ -49,7 +42,7 @@ export const AnnotateHeaderRight: React.FC<Props> = ({ navigation, route }) => {
       saveAnnotation({
         variables: {
           input: {
-            id: undefined,
+            id: route.params.annotation?.id,
             verseId: passageId,
             text,
           },
@@ -65,14 +58,14 @@ export const AnnotateHeaderRight: React.FC<Props> = ({ navigation, route }) => {
     if (hasError || !annotation) {
       Toast.show({ text1: base || ErrorMessages.unknown, type: 'error' });
     } else {
-      Toast.show({ text1: 'Annotation published.' });
+      Toast.show({ text1: route.params.annotation?.id ? 'Annotation saved.' : 'Annotation published.' });
       navigation.goBack();
     }
   }, [saving, passageId, saveAnnotation, text]);
 
   return (
     <Button type="bold" style={{ width: 100 }} onPress={handlePublish}>
-      Publish
+      {route.params.annotation ? 'Save' : 'Publish'}
     </Button>
   );
 };

@@ -8,14 +8,21 @@ import { formatDate } from '../utils/formatters/formatDate';
 import { useActionMenu } from '../hooks/useActionMenu';
 import { useAnnotationFavoriteToggle } from '../hooks/useAnnotationFavoriteToggle';
 import { useAuth } from '../providers/AuthProvider';
+import { useNavigation } from '@react-navigation/native';
+import { verseIdToPassageInfo } from '../utils/verseIdToPassageInfo';
+import { usePassage } from '../hooks/usePassage';
+import { ReadStackNavProps, ReadStackParamList } from '../navigation/ReadStack';
 
 interface Props {
   post: AnnotationFragment;
 }
 
 export const Post: React.FC<Props> = ({ post }) => {
+  const navigation = useNavigation<any>();
   const { user } = useAuth();
   const { toggleIsFavorite } = useAnnotationFavoriteToggle();
+  const passageInfo = verseIdToPassageInfo(post.verseId);
+  const { verseNumber } = usePassage(passageInfo);
 
   const actionMenu = useActionMenu([
     {
@@ -31,7 +38,9 @@ export const Post: React.FC<Props> = ({ post }) => {
     },
     {
       displayName: 'Edit',
-      action: () => {},
+      action: () => {
+        navigation.navigate('Annotate', { verseNumber, annotation: post });
+      },
       hide: !post.isMine,
     },
     {
