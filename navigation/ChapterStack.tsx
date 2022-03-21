@@ -20,7 +20,7 @@ export function ChapterStack() {
   return (
     <Drawer.Navigator
       initialRouteName="ChapterText"
-      drawerContent={ChapterSelector}
+      drawerContent={(props) => <ChapterSelector {...props} />}
       screenOptions={{
         drawerStyle: {
           width: 250, // If changing this, make sure that the chapter options still render correctly.

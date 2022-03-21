@@ -12,3 +12,11 @@ export const Colors = {
   secondary10: 'rgba(82, 146, 255, 0.1)',
   textInverse: '#FFFFFF',
 } as const;
+
+export const Shadows = {
+  level1: {
+    shadowRadius: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+  },
+} as const;

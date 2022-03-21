@@ -14,7 +14,7 @@ export interface PassageContext {
   fullName?: string;
 }
 
-type UsePassageArgs = { bookName: string; chapterNumber: number; verseNumber?: number };
+type UsePassageArgs = { bookName?: string; chapterNumber?: number; verseNumber?: number };
 
 export function usePassage(args: UsePassageArgs | undefined): PassageContext {
   const context: PassageContext = useMemo(() => {

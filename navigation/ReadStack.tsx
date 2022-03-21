@@ -9,7 +9,7 @@ import { Verse } from '../screens/Verse';
 import { VerseBookmarkButton } from '../components/VerseBookmarkButton';
 import { Annotate } from '../screens/Annotate';
 import { AnnotateHeaderRight } from '../components/AnnotateHeaderRight';
-import { Colors } from '../constants/Colors';
+import { VerseLoader } from '../components/VerseLoader';
 
 export interface ReadStackParamList extends ParamListBase {
   Chapter: undefined;
@@ -35,7 +35,11 @@ export function ReadStack(_props: MainTabStackNavProps<'Read'>) {
         component={Verse}
         options={({ route }) => ({
           title: formatTextAddress(bookName, chapterNumber, route.params.verseNumber),
-          headerRight: () => <VerseBookmarkButton />,
+          headerRight: () => (
+            <VerseLoader bookName={bookName} chapterNumber={chapterNumber} verseNumber={route.params.verseNumber}>
+              {({ verse }) => <VerseBookmarkButton verse={verse} />}
+            </VerseLoader>
+          ),
         })}
       />
       <Stack.Screen

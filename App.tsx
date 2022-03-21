@@ -8,7 +8,8 @@ import { BookNavigationProvider } from './providers/BookNavigationProvider';
 import { ApolloProvider } from '@apollo/client';
 import { apolloClient } from './api/apollo';
 import { AuthProvider } from './providers/AuthProvider';
-import { RootSiblingParent } from 'react-native-root-siblings';
+import Toast from 'react-native-toast-message';
+import { toastConfig } from './constants/toastConfig';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -22,12 +23,11 @@ export default function App() {
           <SafeAreaProvider>
             <ActionSheetProvider>
               <BookNavigationProvider>
-                <RootSiblingParent>
-                  <>
-                    <RootStack />
-                    <StatusBar style="dark" />
-                  </>
-                </RootSiblingParent>
+                <>
+                  <RootStack />
+                  <StatusBar style="dark" />
+                  <Toast config={toastConfig} />
+                </>
               </BookNavigationProvider>
             </ActionSheetProvider>
           </SafeAreaProvider>

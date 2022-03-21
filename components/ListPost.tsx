@@ -1,16 +1,17 @@
 ﻿import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Colors } from '../constants/Colors';
-import { Post, PostItem } from './Post';
+import { Post } from './Post';
+import { AnnotationFragment } from '../api/__generated__/apollo-graphql';
 
 interface Props {
-  post: PostItem;
+  post: AnnotationFragment;
 }
 
 export const ListPost: React.FC<Props> = ({ post }) => {
   return (
     <View style={styles.container}>
-        <Post post={post} />
+      <Post post={post} />
     </View>
   );
 };

@@ -12,9 +12,10 @@ export const BookNavigationContext = React.createContext<BookNavigationProviderS
   change: () => {},
 });
 
-export const useBookNavigation = () => {
-  return useContext<BookNavigationProviderState>(BookNavigationContext);
-};
+export function useBookNavigation() {
+  const context = useContext<BookNavigationProviderState>(BookNavigationContext);
+  return context;
+}
 
 export const BookNavigationProvider: React.FC = ({ children }) => {
   const [state, setState] = useState<Pick<BookNavigationProviderState, 'bookName' | 'chapterNumber'>>({

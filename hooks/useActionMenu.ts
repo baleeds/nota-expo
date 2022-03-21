@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 interface ActionSheetItem {
   displayName: string;
   action: () => void;
+  hide?: boolean;
 }
 
 interface ActionSheetArgs {
@@ -11,7 +12,8 @@ interface ActionSheetArgs {
   cancelText?: string;
 }
 
-const getActionSheetOptions = (items: ActionSheetItem[], args: ActionSheetArgs = {}) => {
+const getActionSheetOptions = (itemsRegardlessOfHideStatus: ActionSheetItem[], args: ActionSheetArgs = {}) => {
+  const items = itemsRegardlessOfHideStatus.filter((i) => i.hide !== true);
   const { showCancel = true, cancelText = 'Cancel' } = args;
 
   const options = items.map((i) => i.displayName);

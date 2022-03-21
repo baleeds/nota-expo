@@ -2,18 +2,19 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Colors } from '../constants/Colors';
 import { AntDesign } from '@expo/vector-icons';
-import { ActionSheetProps, useActionSheet } from '@expo/react-native-action-sheet';
 import { AnnotationFragment } from '../api/__generated__/apollo-graphql';
 import { formatUserName } from '../utils/formatters/formatUserName';
 import { formatDate } from '../utils/formatters/formatDate';
 import { useActionMenu } from '../hooks/useActionMenu';
 import { useAnnotationFavoriteToggle } from '../hooks/useAnnotationFavoriteToggle';
+import { useAuth } from '../providers/AuthProvider';
 
 interface Props {
   post: AnnotationFragment;
 }
 
 export const Post: React.FC<Props> = ({ post }) => {
+  const { user } = useAuth();
   const { toggleIsFavorite } = useAnnotationFavoriteToggle();
 
   const actionMenu = useActionMenu([
@@ -26,14 +27,17 @@ export const Post: React.FC<Props> = ({ post }) => {
       action: () => {
         toggleIsFavorite(post);
       },
+      hide: !user,
     },
     {
       displayName: 'Edit',
       action: () => {},
+      hide: !post.isMine,
     },
     {
       displayName: 'Delete',
       action: () => {},
+      hide: !post.isMine,
     },
   ]);
 
@@ -42,9 +46,11 @@ export const Post: React.FC<Props> = ({ post }) => {
       <View style={styles.contentHeader}>
         <Text style={styles.authorText}>{formatUserName(post.user)}</Text>
         <View style={styles.contentRight}>
-          <TouchableOpacity style={styles.contentRightIcon} onPress={() => toggleIsFavorite(post)}>
-            <AntDesign name={post.isFavorite ? 'heart' : 'hearto'} size={20} color={Colors.secondary} />
-          </TouchableOpacity>
+          {user && (
+            <TouchableOpacity style={styles.contentRightIcon} onPress={() => toggleIsFavorite(post)}>
+              <AntDesign name={post.isFavorite ? 'heart' : 'hearto'} size={20} color={Colors.secondary} />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity style={styles.contentRightIcon} onPress={() => actionMenu.show()}>
             <AntDesign name={'ellipsis1'} size={20} color={Colors.secondary} />
           </TouchableOpacity>

@@ -1,7 +1,7 @@
 schema: ${API_URL}
 documents:
   - './api/**/*.{tsx,ts}'
-  - '!./api/__generated__/apollo-graphql.ts'
+  - '!./api/__generated__/apollo-graphql.{tsx,ts}'
 overwrite: true
 generates:
   ./api/__generated__/possibleTypes.ts:

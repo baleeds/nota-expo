@@ -1,4 +1,4 @@
-﻿import React, { useCallback, useMemo } from 'react';
+﻿import React, { useCallback } from 'react';
 import { ReadStackNavProps } from '../navigation/ReadStack';
 import { SectionList, StyleSheet, Text, View } from 'react-native';
 import { ListPost } from '../components/ListPost';
@@ -7,12 +7,7 @@ import { Button } from '../components/Button';
 import { useBookNavigation } from '../providers/BookNavigationProvider';
 import { usePassage } from '../hooks/usePassage';
 import { verseToText } from '../utils/verseToText';
-import { useAuth } from '../providers/AuthProvider';
-import {
-  AnnotationFragment,
-  useMyVerseAnnotationsQuery,
-  useVerseAnnotationsQuery,
-} from '../api/__generated__/apollo-graphql';
+import { AnnotationFragment, useVerseAnnotationsQuery } from '../api/__generated__/apollo-graphql';
 import { extractNodes } from '../utils/extractNodes';
 import { PageSize } from '../constants/PageSize';
 import produce from 'immer';
@@ -24,56 +19,39 @@ export const Verse: React.FC<ReadStackNavProps<'Verse'>> = ({ navigation, route 
   const { verse, passageId } = usePassage({ bookName, chapterNumber, verseNumber });
   const verseText = verseToText(verse);
 
-  const { user } = useAuth();
-
-  const verseAnnotations = useVerseAnnotationsQuery({
+  const { data, loading, fetchMore } = useVerseAnnotationsQuery({
     variables: {
       verseId: passageId ?? '',
       first: PageSize.default,
     },
   });
-  const myVerseAnnotations = useMyVerseAnnotationsQuery({
-    variables: { verseId: passageId ?? '' },
-    skip: !user,
-  });
 
-  const publicAnnotations = extractNodes<AnnotationFragment>(verseAnnotations.data?.publicAnnotations?.edges);
-  const myAnnotations = extractNodes<AnnotationFragment>(myVerseAnnotations.data?.myAnnotations?.edges);
+  const annotations = extractNodes<AnnotationFragment>(data?.annotations?.edges);
 
-  const allAnnotations: AnnotationFragment[] | undefined = useMemo(() => {
-    if (!publicAnnotations) return undefined;
-    if (user) {
-      if (!myAnnotations) return undefined;
-      return [...myAnnotations, ...publicAnnotations];
-    }
-    return publicAnnotations;
-  }, [user, publicAnnotations, myAnnotations]);
-
-  const { pageInfo } = verseAnnotations.data?.publicAnnotations || {};
-  const loading = verseAnnotations.loading || myVerseAnnotations.loading;
+  const { pageInfo } = data?.annotations || {};
 
   const handleShowMore = useCallback(() => {
     if (loading || !pageInfo?.hasNextPage) {
       return;
     }
 
-    verseAnnotations.fetchMore({
+    fetchMore({
       variables: {
         first: PageSize.default,
         after: pageInfo?.endCursor,
       },
       updateQuery: (previousResult, nextResult) => {
         return produce(previousResult, (draftResult) => {
-          if (!draftResult?.publicAnnotations?.edges || !nextResult?.fetchMoreResult?.publicAnnotations?.edges) {
+          if (!draftResult?.annotations?.edges || !nextResult?.fetchMoreResult?.annotations?.edges) {
             return previousResult;
           }
 
-          draftResult.publicAnnotations.edges.push(...nextResult.fetchMoreResult.publicAnnotations.edges);
-          draftResult.publicAnnotations.pageInfo = nextResult.fetchMoreResult.publicAnnotations.pageInfo;
+          draftResult.annotations.edges.push(...nextResult.fetchMoreResult.annotations.edges);
+          draftResult.annotations.pageInfo = nextResult.fetchMoreResult.annotations.pageInfo;
         });
       },
     });
-  }, [pageInfo, verseAnnotations, loading]);
+  }, [pageInfo, fetchMore, loading]);
 
   return (
     <SectionList
@@ -81,7 +59,7 @@ export const Verse: React.FC<ReadStackNavProps<'Verse'>> = ({ navigation, route 
       renderItem={({ item }) => <ListPost post={item} />}
       sections={[
         {
-          data: allAnnotations ?? [],
+          data: annotations ?? [],
         },
       ]}
       ListHeaderComponent={() => (
@@ -97,9 +75,9 @@ export const Verse: React.FC<ReadStackNavProps<'Verse'>> = ({ navigation, route 
           </View>
         </>
       )}
-      ListFooterComponent={() => (
-        <ShowMoreFooter onPress={() => handleShowMore()} disabled={verseAnnotations.loading} />
-      )}
+      ListFooterComponent={() =>
+        pageInfo?.hasNextPage ? <ShowMoreFooter onPress={() => handleShowMore()} disabled={loading} /> : null
+      }
     />
   );
 };

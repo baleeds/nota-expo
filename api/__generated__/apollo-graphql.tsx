@@ -29,6 +29,7 @@ export type Annotation = Node & {
   id: Scalars['ID'];
   insertedAt: Scalars['DateTime'];
   isFavorite: Scalars['Boolean'];
+  isMine: Scalars['Boolean'];
   numberOfFavorites: Scalars['Int'];
   numberOfReplies: Scalars['Int'];
   text: Scalars['String'];
@@ -318,10 +319,8 @@ export type RootQueryType = {
   __typename?: 'RootQueryType';
   annotation: Annotation;
   annotationReplies?: Maybe<AnnotationReplyConnection>;
-  favoriteAnnotations?: Maybe<AnnotationConnection>;
+  annotations?: Maybe<AnnotationConnection>;
   me?: Maybe<User>;
-  myAnnotations?: Maybe<AnnotationConnection>;
-  publicAnnotations?: Maybe<AnnotationConnection>;
   user: User;
   verse: Verse;
   verses?: Maybe<Array<Verse>>;
@@ -342,28 +341,12 @@ export type RootQueryTypeAnnotationRepliesArgs = {
 };
 
 
-export type RootQueryTypeFavoriteAnnotationsArgs = {
+export type RootQueryTypeAnnotationsArgs = {
   after?: InputMaybe<Scalars['String']>;
   before?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  userId?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type RootQueryTypeMyAnnotationsArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  verseId?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type RootQueryTypePublicAnnotationsArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
+  isFavorite?: InputMaybe<Scalars['Boolean']>;
+  isMine?: InputMaybe<Scalars['Boolean']>;
   last?: InputMaybe<Scalars['Int']>;
   userId?: InputMaybe<Scalars['ID']>;
   verseId?: InputMaybe<Scalars['ID']>;
@@ -584,9 +567,7 @@ export type Verse = {
   verseNumber: Scalars['Int'];
 };
 
-export type AnnotationFragment = { __typename?: 'Annotation', id: string, text: string, isFavorite: boolean, numberOfFavorites: number, insertedAt: any, verseId: string, user: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } };
-
-export type AnnotationListFragment = { __typename?: 'Annotation', id: string, text: string, insertedAt: any, isFavorite: boolean, numberOfFavorites: number, verseId: string, user: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } };
+export type AnnotationFragment = { __typename?: 'Annotation', id: string, text: string, isFavorite: boolean, isMine: boolean, numberOfFavorites: number, insertedAt: any, verseId: string, user: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } };
 
 export type MeFragment = { __typename?: 'User', id: string, email: string };
 
@@ -681,7 +662,7 @@ export type AnnotationQueryVariables = Exact<{
 }>;
 
 
-export type AnnotationQuery = { __typename?: 'RootQueryType', annotation: { __typename?: 'Annotation', id: string, text: string, isFavorite: boolean, numberOfFavorites: number, insertedAt: any, verseId: string, user: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } } };
+export type AnnotationQuery = { __typename?: 'RootQueryType', annotation: { __typename?: 'Annotation', id: string, text: string, isFavorite: boolean, isMine: boolean, numberOfFavorites: number, insertedAt: any, verseId: string, user: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } } };
 
 export type CollectionAnnotationsQueryVariables = Exact<{
   userId: Scalars['ID'];
@@ -690,16 +671,15 @@ export type CollectionAnnotationsQueryVariables = Exact<{
 }>;
 
 
-export type CollectionAnnotationsQuery = { __typename?: 'RootQueryType', publicAnnotations?: { __typename?: 'AnnotationConnection', edges?: Array<{ __typename?: 'AnnotationEdge', node?: { __typename?: 'Annotation', id: string, text: string, insertedAt: any, isFavorite: boolean, numberOfFavorites: number, verseId: string, user: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
+export type CollectionAnnotationsQuery = { __typename?: 'RootQueryType', annotations?: { __typename?: 'AnnotationConnection', edges?: Array<{ __typename?: 'AnnotationEdge', node?: { __typename?: 'Annotation', id: string, text: string, isFavorite: boolean, isMine: boolean, numberOfFavorites: number, insertedAt: any, verseId: string, user: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type FavoriteAnnotationsQueryVariables = Exact<{
   first: Scalars['Int'];
   after?: InputMaybe<Scalars['String']>;
-  userId: Scalars['ID'];
 }>;
 
 
-export type FavoriteAnnotationsQuery = { __typename?: 'RootQueryType', favoriteAnnotations?: { __typename?: 'AnnotationConnection', edges?: Array<{ __typename?: 'AnnotationEdge', node?: { __typename?: 'Annotation', id: string, text: string, insertedAt: any, isFavorite: boolean, numberOfFavorites: number, verseId: string, user: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
+export type FavoriteAnnotationsQuery = { __typename?: 'RootQueryType', annotations?: { __typename?: 'AnnotationConnection', edges?: Array<{ __typename?: 'AnnotationEdge', node?: { __typename?: 'Annotation', id: string, text: string, isFavorite: boolean, isMine: boolean, numberOfFavorites: number, insertedAt: any, verseId: string, user: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type GetVerseQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -714,14 +694,7 @@ export type MyCollectionAnnotationsQueryVariables = Exact<{
 }>;
 
 
-export type MyCollectionAnnotationsQuery = { __typename?: 'RootQueryType', myAnnotations?: { __typename?: 'AnnotationConnection', edges?: Array<{ __typename?: 'AnnotationEdge', node?: { __typename?: 'Annotation', id: string, text: string, insertedAt: any, isFavorite: boolean, numberOfFavorites: number, verseId: string, user: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
-
-export type MyVerseAnnotationsQueryVariables = Exact<{
-  verseId: Scalars['ID'];
-}>;
-
-
-export type MyVerseAnnotationsQuery = { __typename?: 'RootQueryType', myAnnotations?: { __typename?: 'AnnotationConnection', edges?: Array<{ __typename?: 'AnnotationEdge', node?: { __typename?: 'Annotation', id: string, text: string, insertedAt: any, isFavorite: boolean, numberOfFavorites: number, verseId: string, user: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } } | null } | null> | null } | null };
+export type MyCollectionAnnotationsQuery = { __typename?: 'RootQueryType', annotations?: { __typename?: 'AnnotationConnection', edges?: Array<{ __typename?: 'AnnotationEdge', node?: { __typename?: 'Annotation', id: string, text: string, isFavorite: boolean, isMine: boolean, numberOfFavorites: number, insertedAt: any, verseId: string, user: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type UserProfileQueryVariables = Exact<{
   userId: Scalars['ID'];
@@ -737,7 +710,7 @@ export type VerseAnnotationsQueryVariables = Exact<{
 }>;
 
 
-export type VerseAnnotationsQuery = { __typename?: 'RootQueryType', publicAnnotations?: { __typename?: 'AnnotationConnection', edges?: Array<{ __typename?: 'AnnotationEdge', node?: { __typename?: 'Annotation', id: string, text: string, insertedAt: any, isFavorite: boolean, numberOfFavorites: number, verseId: string, user: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
+export type VerseAnnotationsQuery = { __typename?: 'RootQueryType', annotations?: { __typename?: 'AnnotationConnection', edges?: Array<{ __typename?: 'AnnotationEdge', node?: { __typename?: 'Annotation', id: string, text: string, isFavorite: boolean, isMine: boolean, numberOfFavorites: number, insertedAt: any, verseId: string, user: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type VersesForChapterQueryVariables = Exact<{
   bookNumber: Scalars['Int'];
@@ -752,23 +725,9 @@ export const AnnotationFragmentDoc = gql`
   id
   text
   isFavorite
+  isMine
   numberOfFavorites
   insertedAt
-  verseId
-  user {
-    id
-    firstName
-    lastName
-  }
-}
-    `;
-export const AnnotationListFragmentDoc = gql`
-    fragment AnnotationList on Annotation {
-  id
-  text
-  insertedAt
-  isFavorite
-  numberOfFavorites
   verseId
   user {
     id
@@ -1302,10 +1261,10 @@ export type AnnotationLazyQueryHookResult = ReturnType<typeof useAnnotationLazyQ
 export type AnnotationQueryResult = Apollo.QueryResult<AnnotationQuery, AnnotationQueryVariables>;
 export const CollectionAnnotationsDocument = gql`
     query CollectionAnnotations($userId: ID!, $first: Int, $after: String) {
-  publicAnnotations(userId: $userId, first: $first, after: $after) {
+  annotations(userId: $userId, first: $first, after: $after) {
     edges {
       node {
-        ...AnnotationList
+        ...Annotation
       }
     }
     pageInfo {
@@ -1316,7 +1275,7 @@ export const CollectionAnnotationsDocument = gql`
     }
   }
 }
-    ${AnnotationListFragmentDoc}`;
+    ${AnnotationFragmentDoc}`;
 
 /**
  * __useCollectionAnnotationsQuery__
@@ -1348,11 +1307,11 @@ export type CollectionAnnotationsQueryHookResult = ReturnType<typeof useCollecti
 export type CollectionAnnotationsLazyQueryHookResult = ReturnType<typeof useCollectionAnnotationsLazyQuery>;
 export type CollectionAnnotationsQueryResult = Apollo.QueryResult<CollectionAnnotationsQuery, CollectionAnnotationsQueryVariables>;
 export const FavoriteAnnotationsDocument = gql`
-    query FavoriteAnnotations($first: Int!, $after: String, $userId: ID!) {
-  favoriteAnnotations(first: $first, after: $after, userId: $userId) {
+    query FavoriteAnnotations($first: Int!, $after: String) {
+  annotations(first: $first, after: $after, isFavorite: true) {
     edges {
       node {
-        ...AnnotationList
+        ...Annotation
       }
     }
     pageInfo {
@@ -1363,7 +1322,7 @@ export const FavoriteAnnotationsDocument = gql`
     }
   }
 }
-    ${AnnotationListFragmentDoc}`;
+    ${AnnotationFragmentDoc}`;
 
 /**
  * __useFavoriteAnnotationsQuery__
@@ -1379,7 +1338,6 @@ export const FavoriteAnnotationsDocument = gql`
  *   variables: {
  *      first: // value for 'first'
  *      after: // value for 'after'
- *      userId: // value for 'userId'
  *   },
  * });
  */
@@ -1431,10 +1389,10 @@ export type GetVerseLazyQueryHookResult = ReturnType<typeof useGetVerseLazyQuery
 export type GetVerseQueryResult = Apollo.QueryResult<GetVerseQuery, GetVerseQueryVariables>;
 export const MyCollectionAnnotationsDocument = gql`
     query MyCollectionAnnotations($first: Int!, $after: String) {
-  myAnnotations(first: $first, after: $after) {
+  annotations(first: $first, after: $after, isMine: true) {
     edges {
       node {
-        ...AnnotationList
+        ...Annotation
       }
     }
     pageInfo {
@@ -1445,7 +1403,7 @@ export const MyCollectionAnnotationsDocument = gql`
     }
   }
 }
-    ${AnnotationListFragmentDoc}`;
+    ${AnnotationFragmentDoc}`;
 
 /**
  * __useMyCollectionAnnotationsQuery__
@@ -1475,45 +1433,6 @@ export function useMyCollectionAnnotationsLazyQuery(baseOptions?: Apollo.LazyQue
 export type MyCollectionAnnotationsQueryHookResult = ReturnType<typeof useMyCollectionAnnotationsQuery>;
 export type MyCollectionAnnotationsLazyQueryHookResult = ReturnType<typeof useMyCollectionAnnotationsLazyQuery>;
 export type MyCollectionAnnotationsQueryResult = Apollo.QueryResult<MyCollectionAnnotationsQuery, MyCollectionAnnotationsQueryVariables>;
-export const MyVerseAnnotationsDocument = gql`
-    query MyVerseAnnotations($verseId: ID!) {
-  myAnnotations(verseId: $verseId, first: 100) {
-    edges {
-      node {
-        ...AnnotationList
-      }
-    }
-  }
-}
-    ${AnnotationListFragmentDoc}`;
-
-/**
- * __useMyVerseAnnotationsQuery__
- *
- * To run a query within a React component, call `useMyVerseAnnotationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useMyVerseAnnotationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMyVerseAnnotationsQuery({
- *   variables: {
- *      verseId: // value for 'verseId'
- *   },
- * });
- */
-export function useMyVerseAnnotationsQuery(baseOptions: Apollo.QueryHookOptions<MyVerseAnnotationsQuery, MyVerseAnnotationsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MyVerseAnnotationsQuery, MyVerseAnnotationsQueryVariables>(MyVerseAnnotationsDocument, options);
-      }
-export function useMyVerseAnnotationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyVerseAnnotationsQuery, MyVerseAnnotationsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MyVerseAnnotationsQuery, MyVerseAnnotationsQueryVariables>(MyVerseAnnotationsDocument, options);
-        }
-export type MyVerseAnnotationsQueryHookResult = ReturnType<typeof useMyVerseAnnotationsQuery>;
-export type MyVerseAnnotationsLazyQueryHookResult = ReturnType<typeof useMyVerseAnnotationsLazyQuery>;
-export type MyVerseAnnotationsQueryResult = Apollo.QueryResult<MyVerseAnnotationsQuery, MyVerseAnnotationsQueryVariables>;
 export const UserProfileDocument = gql`
     query UserProfile($userId: ID!) {
   user(id: $userId) {
@@ -1553,10 +1472,10 @@ export type UserProfileLazyQueryHookResult = ReturnType<typeof useUserProfileLaz
 export type UserProfileQueryResult = Apollo.QueryResult<UserProfileQuery, UserProfileQueryVariables>;
 export const VerseAnnotationsDocument = gql`
     query VerseAnnotations($first: Int, $after: String, $verseId: ID!) {
-  publicAnnotations(first: $first, after: $after, verseId: $verseId) {
+  annotations(first: $first, after: $after, verseId: $verseId) {
     edges {
       node {
-        ...AnnotationList
+        ...Annotation
       }
     }
     pageInfo {
@@ -1567,7 +1486,7 @@ export const VerseAnnotationsDocument = gql`
     }
   }
 }
-    ${AnnotationListFragmentDoc}`;
+    ${AnnotationFragmentDoc}`;
 
 /**
  * __useVerseAnnotationsQuery__

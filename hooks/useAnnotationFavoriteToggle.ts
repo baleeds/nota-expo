@@ -7,9 +7,9 @@
 } from '../api/__generated__/apollo-graphql';
 import { attempt } from '../utils/attempt';
 import { normalizeErrors } from '../utils/normalizeErrors';
-import { toast } from '../utils/toast';
 import { ErrorMessages } from '../constants/ErrorMessages';
 import { useAuth } from '../providers/AuthProvider';
+import Toast from 'react-native-toast-message';
 
 type AnnotationForFavoriteToggle = Pick<Annotation, 'isFavorite' | 'numberOfFavorites' | 'id'>;
 
@@ -48,7 +48,7 @@ export function useAnnotationFavoriteToggle() {
     const { hasError, base } = normalizeErrors<FavoriteAnnotationMutation>(failure, result);
 
     if (hasError) {
-      toast({ message: base || ErrorMessages.unknown, type: 'error' });
+      Toast.show({ text1: base || ErrorMessages.unknown, type: 'error' });
     }
   };
 
@@ -82,7 +82,7 @@ export function useAnnotationFavoriteToggle() {
     const { hasError, base } = normalizeErrors<UnfavoriteAnnotationMutation>(failure, result);
 
     if (hasError) {
-      toast({ message: base || ErrorMessages.unknown, type: 'error' });
+      Toast.show({ text1: base || ErrorMessages.unknown, type: 'error' });
     }
   };
 
@@ -90,7 +90,7 @@ export function useAnnotationFavoriteToggle() {
     if (!annotation) return;
 
     if (!user) {
-      toast({ message: 'You must be logged in to do that.', type: 'default' });
+      Toast.show({ text1: 'You must be logged in to do that.', type: 'info' });
       return;
     }
 

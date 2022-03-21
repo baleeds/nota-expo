@@ -5,6 +5,7 @@ export const annotationFragment = gql`
     id
     text
     isFavorite
+    isMine
     numberOfFavorites
     insertedAt
     verseId
